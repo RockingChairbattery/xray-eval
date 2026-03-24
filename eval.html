@@ -330,7 +330,7 @@
         <div class="actions">
           <button class="action-btn" id="prevBtn">Last</button>
           <button class="action-btn" id="nextBtn">Next</button>
-          <button class="action-btn primary" id="exportBtn">Export CSV</button>
+
         </div>
         <div class="error-box" id="errorBox" style="display:none;"></div>
       </div>
@@ -790,9 +790,7 @@
       if (currentIndex < samples.length - 1) { currentIndex += 1; saveLocalCache(); renderAll(); }
     });
 
-    document.getElementById("exportBtn").addEventListener("click", () => {
-      downloadTextFile(toCSV(exportRows()), "radiologist_eval_" + evaluatorId + ".csv", "text/csv;charset=utf-8;");
-    });
+
 
   </script>
 </body>
