@@ -387,20 +387,21 @@
 
     // ── GOOGLE SHEET API ──────────────────────────────────────────────────────
 
-    // POST: upsert one row
+    // Write via GET (action=write) to avoid no-cors POST issues
     async function sheetUpsert(row) {
-      await fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify([row])
-      });
-      // no-cors: can't read response body, but throw on network error
+      const url = GOOGLE_SHEET_URL
+        + "?action=write"
+        + "&data=" + encodeURIComponent(JSON.stringify(row));
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.status === "error") throw new Error(data.message);
     }
 
-    // GET: fetch all rows for this evaluator
+    // Read via GET (action=read)
     async function sheetFetch(evId) {
-      const url = GOOGLE_SHEET_URL + "?evaluator_id=" + encodeURIComponent(evId);
+      const url = GOOGLE_SHEET_URL
+        + "?action=read"
+        + "&evaluator_id=" + encodeURIComponent(evId);
       const res = await fetch(url);
       const data = await res.json();
       if (data.status === "error") throw new Error(data.message);
