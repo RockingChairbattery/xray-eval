@@ -1,0 +1,19 @@
+﻿sample_id,image_path,text_prompt
+1,cheff/36199.png,Normal
+2,real/69978.png,"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"
+3,real/36199.png,Normal
+4,aurad/40422.png,mild Consolidation on left upper lung
+5,ours/69978.png,"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"
+6,cheff/40422.png,mild Consolidation on left upper lung
+7,roentgen/69978.png,"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"
+8,aurad/36199.png,Normal
+9,roentgenv2/40422.png,mild Consolidation on left upper lung
+10,real/40422.png,mild Consolidation on left upper lung
+11,roentgen/40422.png,mild Consolidation on left upper lung
+12,ours/36199.png,Normal
+13,aurad/69978.png,"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"
+14,ours/40422.png,mild Consolidation on left upper lung
+15,roentgenv2/36199.png,Normal
+16,roentgen/36199.png,Normal
+17,cheff/69978.png,"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"
+18,roentgenv2/69978.png,"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"

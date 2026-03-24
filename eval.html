@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radiologist Evaluation</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      margin-bottom: 18px;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .badges {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+    .badge.saved {
+      background: #16a34a;
+      color: #fff;
+      border-color: #16a34a;
+    }
+    .badge.unsaved {
+      background: #f59e0b;
+      color: #fff;
+      border-color: #f59e0b;
+    }
+    .evaluator-box {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .evaluator-box label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #374151;
+      white-space: nowrap;
+    }
+    .evaluator-box input[type="text"] {
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 14px;
+      width: 220px;
+      outline: none;
+    }
+    .evaluator-box input[type="text"]:focus {
+      border-color: #111827;
+    }
+    .evaluator-hint {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .progress-wrap {
+      margin-top: 16px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #4b5563;
+      margin-bottom: 8px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #111827;
+      transition: width 0.2s ease;
+    }
+    .nav-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-top: 14px;
+      padding-bottom: 6px;
+    }
+    .nav-btn {
+      min-width: 42px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #374151;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .nav-btn.current {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+    .nav-btn.done {
+      background: #ecfdf5;
+      color: #15803d;
+      border-color: #16a34a;
+    }
+    .guide-item {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 14px;
+    }
+    .guide-item h4 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+    }
+    .guide-item p {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.5;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 18px;
+    }
+    @media (max-width: 1100px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 14px 0;
+    }
+    .field-box {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #fff;
+    }
+    .field-label {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .field-value {
+      font-size: 16px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .image-wrap {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      background: #fff;
+      min-height: 520px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .image-wrap img {
+      width: 512px;
+      height: 512px;
+      object-fit: contain;
+      display: block;
+    }
+    .score-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .status-inline {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .status-inline.saved { color: #15803d; }
+    .status-inline.unsaved { color: #d97706; }
+    .score-group {
+      margin-bottom: 20px;
+    }
+    .score-label {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .score-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .score-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #374151;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .score-btn.active {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+    .na-box {
+      display: inline-flex;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      background: #e5e7eb;
+      color: #4b5563;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    button.action-btn {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    button.action-btn.primary {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+    button.action-btn.danger {
+      background: #dc2626;
+      color: #fff;
+      border-color: #dc2626;
+    }
+    button.action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .error-box {
+      margin-top: 14px;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      color: #b91c1c;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .ok-box {
+      margin-top: 14px;
+      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+      color: #166534;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .submitting-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+    .submitting-overlay.active {
+      display: flex;
+    }
+    .submitting-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 32px 40px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+    .submitting-box .spin {
+      font-size: 36px;
+      animation: spin 1s linear infinite;
+      display: block;
+      margin-bottom: 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .submitting-box p {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Submitting overlay -->
+  <div class="submitting-overlay" id="submittingOverlay">
+    <div class="submitting-box">
+      <span class="spin">⏳</span>
+      <p>Submitting to Google Sheet…</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="header-row">
+        <div class="title">Radiologist Evaluation</div>
+        <div class="badges">
+          <div class="badge" id="completedBadge">0/0 completed</div>
+          <div class="badge saved" id="saveBadge">Saved</div>
+        </div>
+      </div>
+
+      <!-- Evaluator ID -->
+      <div class="evaluator-box">
+        <label for="evaluatorId">Your Name / ID:</label>
+        <input type="text" id="evaluatorId" placeholder="e.g. Dr. Smith" />
+        <span class="evaluator-hint">Required before submitting</span>
+      </div>
+
+      <div class="guide-item" style="line-height: 1.7;">
+        <h4>Scoring Guide</h4>
+        <p><b>Realism</b><br>Judge overall realism by visual intuition only. Ignore the text prompt.</p>
+        <p><b>Anatomy</b><br>Judge whether the anatomical structures look realistic. Ignore the text prompt.</p>
+        <p><b>Disease</b><br>
+          <b>• Category:</b> Judge whether the disease category is represented in the image. Ignore location and severity.<br>
+          <b>• Location:</b> Judge whether the disease location matches the description.<br>
+          <b>• Severity:</b> Judge whether the disease severity matches the description.
+        </p>
+        <p><b>Score Meaning</b><br>1 = worst / not matched &nbsp;&nbsp; 5 = best / fully matched</p>
+        <p style="margin-bottom:0;"><b>For Normal Samples</b><br>Disease Representation: score as usual &nbsp;|&nbsp; Accurate Location: N/A &nbsp;|&nbsp; Accurate Severity: N/A</p>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span id="progressText">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="nav-row" id="navRow"></div>
+
+      <div id="infoBox" class="ok-box" style="display:none;"></div>
+      <div id="errorBoxTop" class="error-box" style="display:none;"></div>
+    </div>
+
+    <div class="main-grid">
+      <div class="card">
+        <h2 class="section-title">Sample Viewer</h2>
+        <div class="field-box">
+          <div class="field-label">Text Prompt</div>
+          <div class="field-value" id="textPrompt">-</div>
+        </div>
+        <div class="image-wrap">
+          <img id="sampleImage" alt="sample" style="width:512px;height:512px;object-fit:contain;" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="score-header">
+          <h2 class="section-title" style="margin-bottom:2;">Scoring Panel</h2>
+          <div class="status-inline saved" id="saveStatusText">Saved</div>
+        </div>
+
+        <div id="scorePanel"></div>
+
+        <div class="actions">
+          <button class="action-btn" id="prevBtn">Last</button>
+          <button class="action-btn" id="nextBtn">Next</button>
+          <button class="action-btn primary" id="submitBtn">Submit to Google Sheet</button>
+          <button class="action-btn" id="exportBtn">Export CSV</button>
+        </div>
+
+        <div class="error-box" id="errorBox" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIG ────────────────────────────────────────────────────────────────
+    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw1qsNLrcaN4Xsc4ZwgQ-ttv_Q7_XwOYlAOQNvp6bd4x2jSIMbJhCl2kcvtFoGODwk3-Q/exec";
+
+    // GitHub raw base URL for images.
+    // After you push to GitHub, replace this with your actual URL, e.g.:
+    // "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/source/image"
+    const IMAGE_BASE_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/source/image";
+
+    // Embedded samples — will be replaced by build_standalone.py if used offline
+    // For online use, define your samples here directly:
+    const SAMPLES = [
+      {"sample_id":"1","image_path":"cheff/36199.png","text_prompt":"Normal"},
+      {"sample_id":"2","image_path":"real/69978.png","text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
+      {"sample_id":"3","image_path":"real/36199.png","text_prompt":"Normal"},
+      {"sample_id":"4","image_path":"aurad/40422.png","text_prompt":"mild Consolidation on left upper lung"},
+      {"sample_id":"5","image_path":"ours/69978.png","text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
+      {"sample_id":"6","image_path":"cheff/40422.png","text_prompt":"mild Consolidation on left upper lung"},
+      {"sample_id":"7","image_path":"roentgen/69978.png","text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
+      {"sample_id":"8","image_path":"aurad/36199.png","text_prompt":"Normal"},
+      {"sample_id":"9","image_path":"roentgenv2/40422.png","text_prompt":"mild Consolidation on left upper lung"},
+      {"sample_id":"10","image_path":"real/40422.png","text_prompt":"mild Consolidation on left upper lung"},
+      {"sample_id":"11","image_path":"roentgen/40422.png","text_prompt":"mild Consolidation on left upper lung"},
+      {"sample_id":"12","image_path":"ours/36199.png","text_prompt":"Normal"},
+      {"sample_id":"13","image_path":"aurad/69978.png","text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
+      {"sample_id":"14","image_path":"ours/40422.png","text_prompt":"mild Consolidation on left upper lung"},
+      {"sample_id":"15","image_path":"roentgenv2/36199.png","text_prompt":"Normal"},
+      {"sample_id":"16","image_path":"roentgen/36199.png","text_prompt":"Normal"},
+      {"sample_id":"17","image_path":"cheff/69978.png","text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
+      {"sample_id":"18","image_path":"roentgenv2/69978.png","text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"}
+    ];
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const STORAGE_KEY = "radiologist_eval_online_v1";
+
+    let samples = [];
+    let responses = {};
+    let currentIndex = 0;
+    let visitedStartAt = {};
+    let saveStatus = "Saved";
+
+    function setSaveStatus(status) {
+      saveStatus = status;
+      const badge = document.getElementById("saveBadge");
+      const inline = document.getElementById("saveStatusText");
+      badge.textContent = status;
+      inline.textContent = status;
+      badge.className = "badge " + (status === "Saved" ? "saved" : "unsaved");
+      inline.className = "status-inline " + (status === "Saved" ? "saved" : "unsaved");
+    }
+
+    function showError(message, top = false) {
+      const id = top ? "errorBoxTop" : "errorBox";
+      const box = document.getElementById(id);
+      box.style.display = "block";
+      box.textContent = message;
+    }
+
+    function clearError() {
+      ["errorBox", "errorBoxTop"].forEach(id => {
+        const box = document.getElementById(id);
+        box.style.display = "none";
+        box.textContent = "";
+      });
+    }
+
+    function showInfo(message) {
+      const box = document.getElementById("infoBox");
+      box.style.display = "block";
+      box.textContent = message;
+    }
+
+    function hideInfo() {
+      const box = document.getElementById("infoBox");
+      box.style.display = "none";
+      box.textContent = "";
+    }
+
+    function toCSV(rows) {
+      if (!rows.length) return "";
+      const headers = Object.keys(rows[0]);
+      function esc(v) {
+        const s = String(v ?? "");
+        if (s.includes(",") || s.includes("\n") || s.includes('"')) {
+          return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+      }
+      return [headers.join(",")]
+        .concat(rows.map(row => headers.map(h => esc(row[h])).join(",")))
+        .join("\n");
+    }
+
+    function downloadTextFile(content, filename, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function isNormalPrompt(prompt) {
+      return String(prompt || "").trim().toLowerCase() === "normal";
+    }
+
+    function makeEmptyResponse(sampleId) {
+      return {
+        sample_id: sampleId,
+        intuition_realism: "",
+        anatomy: "",
+        disease_representation: "",
+        accurate_location: "",
+        accurate_severity: "",
+        review_started_at: "",
+        review_submitted_at: "",
+        time_spent_sec: ""
+      };
+    }
+
+    function ensureResponse(sample) {
+      if (!responses[sample.sample_id]) {
+        responses[sample.sample_id] = makeEmptyResponse(sample.sample_id);
+      }
+      return responses[sample.sample_id];
+    }
+
+    function getCurrentSample() {
+      return samples[currentIndex] || null;
+    }
+
+    function markDirty() {
+      setSaveStatus("Unsaved");
+      clearError();
+    }
+
+    function saveLocalState() {
+      const evaluatorId = document.getElementById("evaluatorId").value.trim();
+      const payload = { samples, responses, currentIndex, visitedStartAt, evaluatorId };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      setSaveStatus("Saved");
+    }
+
+    function loadLocalState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        if (!data || !Array.isArray(data.samples) || !data.samples.length) return false;
+        samples = data.samples || [];
+        responses = data.responses || {};
+        currentIndex = data.currentIndex || 0;
+        visitedStartAt = data.visitedStartAt || {};
+        if (data.evaluatorId) {
+          document.getElementById("evaluatorId").value = data.evaluatorId;
+        }
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function normalizePath(path) {
+      return String(path || "").replace(/\\/g, "/").replace(/^\.?\//, "");
+    }
+
+    function computeCompletedSet() {
+      const done = new Set();
+      samples.forEach(sample => {
+        const r = ensureResponse(sample);
+        const basic = r.intuition_realism && r.anatomy && r.disease_representation;
+        const extra = isNormalPrompt(sample.text_prompt)
+          ? r.accurate_location === "NA" && r.accurate_severity === "NA"
+          : r.accurate_location && r.accurate_severity;
+        if (basic && extra) done.add(sample.sample_id);
+      });
+      return done;
+    }
+
+    function syncNormalFields(sample) {
+      if (!sample || !isNormalPrompt(sample.text_prompt)) return;
+      const r = ensureResponse(sample);
+      r.accurate_location = "NA";
+      r.accurate_severity = "NA";
+      if (!r.review_started_at) {
+        r.review_started_at = visitedStartAt[sample.sample_id] || new Date().toISOString();
+      }
+      r.review_submitted_at = new Date().toISOString();
+      const startTs = new Date(r.review_started_at).getTime();
+      if (!Number.isNaN(startTs)) {
+        r.time_spent_sec = Math.max(1, Math.round((Date.now() - startTs) / 1000));
+      }
+    }
+
+    function autoSaveCurrent() {
+      const sample = getCurrentSample();
+      if (sample && isNormalPrompt(sample.text_prompt)) {
+        syncNormalFields(sample);
+      }
+      saveLocalState();
+    }
+
+    function getImageURL(imagePath) {
+      const key = normalizePath(imagePath);
+      // If embedded base64 map exists (offline mode via build_standalone.py)
+      if (window.__EMBEDDED_IMAGE_MAP__ && window.__EMBEDDED_IMAGE_MAP__[key]) {
+        return window.__EMBEDDED_IMAGE_MAP__[key];
+      }
+      // Online mode: load from GitHub raw URL
+      return IMAGE_BASE_URL + "/" + key;
+    }
+
+    function renderNav() {
+      const navRow = document.getElementById("navRow");
+      navRow.innerHTML = "";
+      const completedSet = computeCompletedSet();
+      samples.forEach((sample, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "nav-btn";
+        btn.textContent = String(idx + 1);
+        btn.title = sample.sample_id;
+        if (idx === currentIndex) btn.classList.add("current");
+        else if (completedSet.has(sample.sample_id)) btn.classList.add("done");
+        btn.addEventListener("click", () => {
+          autoSaveCurrent();
+          currentIndex = idx;
+          if (!visitedStartAt[sample.sample_id]) {
+            visitedStartAt[sample.sample_id] = new Date().toISOString();
+          }
+          renderAll();
+        });
+        navRow.appendChild(btn);
+      });
+    }
+
+    function renderHeader() {
+      const completedSet = computeCompletedSet();
+      const total = samples.length;
+      const done = completedSet.size;
+      const percent = total ? Math.round((done / total) * 100) : 0;
+      document.getElementById("completedBadge").textContent = done + "/" + total + " completed";
+      document.getElementById("progressText").textContent = percent + "%";
+      document.getElementById("progressFill").style.width = percent + "%";
+    }
+
+    function renderSample() {
+      const sample = getCurrentSample();
+      const img = document.getElementById("sampleImage");
+      if (!sample) {
+        document.getElementById("textPrompt").textContent = "-";
+        img.removeAttribute("src");
+        return;
+      }
+      if (!visitedStartAt[sample.sample_id]) {
+        visitedStartAt[sample.sample_id] = new Date().toISOString();
+      }
+      document.getElementById("textPrompt").textContent = sample.text_prompt || "-";
+      img.src = getImageURL(sample.image_path);
+    }
+
+    function makeScoreButtons(field, value, onChange) {
+      const row = document.createElement("div");
+      row.className = "score-buttons";
+      ["1","2","3","4","5"].forEach(n => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "score-btn" + (value === n ? " active" : "");
+        btn.textContent = n;
+        btn.addEventListener("click", () => onChange(n));
+        row.appendChild(btn);
+      });
+      return row;
+    }
+
+    function renderScorePanel() {
+      const panel = document.getElementById("scorePanel");
+      panel.innerHTML = "";
+      const sample = getCurrentSample();
+      if (!sample) return;
+      const response = ensureResponse(sample);
+      const normal = isNormalPrompt(sample.text_prompt);
+
+      function addScoreGroup(label, field) {
+        const wrap = document.createElement("div");
+        wrap.className = "score-group";
+        const labelDiv = document.createElement("div");
+        labelDiv.className = "score-label";
+        labelDiv.textContent = label;
+        const buttons = makeScoreButtons(field, response[field], (val) => {
+          markDirty();
+          response[field] = val;
+          if (!response.review_started_at) {
+            response.review_started_at = visitedStartAt[sample.sample_id] || new Date().toISOString();
+          }
+          response.review_submitted_at = new Date().toISOString();
+          const startTs = new Date(response.review_started_at).getTime();
+          if (!Number.isNaN(startTs)) {
+            response.time_spent_sec = Math.max(1, Math.round((Date.now() - startTs) / 1000));
+          }
+          saveLocalState();
+          renderAll();
+        });
+        wrap.appendChild(labelDiv);
+        wrap.appendChild(buttons);
+        panel.appendChild(wrap);
+      }
+
+      addScoreGroup("Realism", "intuition_realism");
+      addScoreGroup("Anatomy", "anatomy");
+      addScoreGroup("Disease - Category", "disease_representation");
+
+      if (normal) {
+        response.accurate_location = "NA";
+        response.accurate_severity = "NA";
+        const wrap1 = document.createElement("div");
+        wrap1.className = "score-group";
+        wrap1.innerHTML = '<div class="score-label">Accurate Location</div><div class="na-box">N/A</div>';
+        const wrap2 = document.createElement("div");
+        wrap2.className = "score-group";
+        wrap2.innerHTML = '<div class="score-label">Accurate Severity</div><div class="na-box">N/A</div>';
+        panel.appendChild(wrap1);
+        panel.appendChild(wrap2);
+      } else {
+        addScoreGroup("Disease - Location", "accurate_location");
+        addScoreGroup("Disease - Severity", "accurate_severity");
+      }
+    }
+
+    function renderButtons() {
+      document.getElementById("prevBtn").disabled = currentIndex === 0;
+      document.getElementById("nextBtn").disabled = currentIndex === samples.length - 1;
+    }
+
+    function renderAll() {
+      renderHeader();
+      renderNav();
+      renderSample();
+      renderScorePanel();
+      renderButtons();
+    }
+
+    function exportRows() {
+      const evaluatorId = document.getElementById("evaluatorId").value.trim();
+      return samples.map(sample => {
+        const r = ensureResponse(sample);
+        return {
+          evaluator_id: evaluatorId,
+          sample_id: sample.sample_id,
+          image_path: sample.image_path,
+          text_prompt: sample.text_prompt,
+          intuition_realism: r.intuition_realism,
+          anatomy: r.anatomy,
+          disease_representation: r.disease_representation,
+          accurate_location: isNormalPrompt(sample.text_prompt) ? "NA" : r.accurate_location,
+          accurate_severity: isNormalPrompt(sample.text_prompt) ? "NA" : r.accurate_severity,
+          time_spent_sec: r.time_spent_sec,
+          review_started_at: r.review_started_at,
+          review_submitted_at: r.review_submitted_at
+        };
+      });
+    }
+
+    async function submitToGoogleSheet(rows) {
+      const overlay = document.getElementById("submittingOverlay");
+      overlay.classList.add("active");
+      try {
+        const response = await fetch(GOOGLE_SHEET_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(rows)
+        });
+        // no-cors means we can't read response, but if no error thrown = success
+        overlay.classList.remove("active");
+        return true;
+      } catch (err) {
+        overlay.classList.remove("active");
+        throw err;
+      }
+    }
+
+    function bindEvents() {
+      document.getElementById("evaluatorId").addEventListener("change", () => {
+        saveLocalState();
+      });
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        autoSaveCurrent();
+        if (currentIndex > 0) { currentIndex -= 1; renderAll(); }
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        autoSaveCurrent();
+        if (currentIndex < samples.length - 1) { currentIndex += 1; renderAll(); }
+      });
+
+      document.getElementById("exportBtn").addEventListener("click", () => {
+        autoSaveCurrent();
+        const csv = toCSV(exportRows());
+        downloadTextFile(csv, "radiologist_eval_export.csv", "text/csv;charset=utf-8;");
+      });
+
+      document.getElementById("submitBtn").addEventListener("click", async () => {
+        autoSaveCurrent();
+
+        // Check evaluator ID
+        const evaluatorId = document.getElementById("evaluatorId").value.trim();
+        if (!evaluatorId) {
+          showError("Please enter your Name / ID before submitting.", true);
+          document.getElementById("evaluatorId").focus();
+          return;
+        }
+
+        // Check all samples scored
+        const missing = [];
+        samples.forEach((sample, idx) => {
+          const r = ensureResponse(sample);
+          const basic = r.intuition_realism && r.anatomy && r.disease_representation;
+          const extra = isNormalPrompt(sample.text_prompt)
+            ? r.accurate_location === "NA" && r.accurate_severity === "NA"
+            : r.accurate_location && r.accurate_severity;
+          if (!(basic && extra)) missing.push({ index: idx, sample_id: sample.sample_id });
+        });
+
+        if (missing.length) {
+          currentIndex = missing[0].index;
+          renderAll();
+          showError("Unfinished samples: " + missing.map(x => x.sample_id).join(", "));
+          return;
+        }
+
+        clearError();
+        const rows = exportRows();
+
+        try {
+          await submitToGoogleSheet(rows);
+          showInfo("✅ Successfully submitted to Google Sheet! Thank you, " + evaluatorId + ".");
+          // Also download a local backup CSV
+          downloadTextFile(toCSV(rows), "radiologist_eval_" + evaluatorId + ".csv", "text/csv;charset=utf-8;");
+        } catch (err) {
+          showError("Submission failed: " + (err.message || String(err)) + ". Please use Export CSV as backup.", true);
+        }
+      });
+    }
+
+    function init() {
+      bindEvents();
+      clearError();
+      hideInfo();
+      setSaveStatus("Saved");
+
+      const hasLocal = loadLocalState();
+      if (!hasLocal) {
+        // Load embedded samples
+        samples = SAMPLES;
+        const newResp = {};
+        samples.forEach(s => { newResp[s.sample_id] = makeEmptyResponse(s.sample_id); });
+        responses = newResp;
+        currentIndex = 0;
+        visitedStartAt = {};
+        saveLocalState();
+      }
+
+      renderAll();
+    }
+
+    init();
+  </script>
+</body>
+</html>
