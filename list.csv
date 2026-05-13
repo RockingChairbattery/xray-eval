@@ -1,0 +1,101 @@
+sample_id,image_path,text_prompt
+1,roentgen/41207.png,Normal
+2,roentgen/70374.png,"mild Calcification on left upper lung, severe Consolidation on bilateral lung, severe Effusion on bilateral lung"
+3,roentgen/61716.png,"mild Effusion on right lower lung, mild Pleural Thickening on right lung"
+4,roentgen/55836.png,mild Fibrosis on left middle lung
+5,cheff/60255.png,"mild Consolidation on left upper lung, severe Effusion on bilateral lung, mild Nodule on left lower lung, mild Pleural Thickening on left upper lung"
+6,aurad_plus/45617.png,"mild Consolidation on left lower lung, mild Effusion on bilateral lung"
+7,cheff/47170.png,severe Consolidation on bilateral lung
+8,real/39996.png,"mild Consolidation on right middle lung, mild Pneumothorax on right upper lung"
+9,real/59444.png,"mild Atelectasis on right lower lung, mild Consolidation on heart, mild Effusion on right lower lung, mild Nodule on bilateral lung, mild Pleural Thickening on right lung"
+10,real/59576.png,"moderate Consolidation on right lung, mild Effusion on right lower lung, mild Fracture on left lung, mild Pneumothorax on right upper lung"
+11,real/61716.png,"mild Effusion on right lower lung, mild Pleural Thickening on right lung"
+12,real/58528.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+13,aurad_plus/41207.png,Normal
+14,aurad_plus/60255.png,"mild Consolidation on left upper lung, severe Effusion on bilateral lung, mild Nodule on left lower lung, mild Pleural Thickening on left upper lung"
+15,cheff/68962.png,severe Consolidation on bilateral lung
+16,cheff/39133.png,"moderate Consolidation on left lung, severe Effusion on left lung"
+17,roentgen/69887.png,Normal
+18,aurad_plus/58528.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+19,cheff/59420.png,"mild Calcification on left lung, mild Effusion on right lower lung, mild Fracture on right lung"
+20,roentgen/60255.png,"mild Consolidation on left upper lung, severe Effusion on bilateral lung, mild Nodule on left lower lung, mild Pleural Thickening on left upper lung"
+21,real/45617.png,"mild Consolidation on left lower lung, mild Effusion on bilateral lung"
+22,roentgen/59444.png,"mild Atelectasis on right lower lung, mild Consolidation on heart, mild Effusion on right lower lung, mild Nodule on bilateral lung, mild Pleural Thickening on right lung"
+23,aurad_plus/41518.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Fracture on bilateral lung, mild Nodule on left lung"
+24,roentgen/42351.png,"mild Calcification on bilateral lung, moderate Fibrosis on bilateral lung"
+25,aurad_plus/70374.png,"mild Calcification on left upper lung, severe Consolidation on bilateral lung, severe Effusion on bilateral lung"
+26,roentgen/39133.png,"moderate Consolidation on left lung, severe Effusion on left lung"
+27,real/70374.png,"mild Calcification on left upper lung, severe Consolidation on bilateral lung, severe Effusion on bilateral lung"
+28,cheff/47242.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Nodule on left middle lung, mild Pleural Thickening on left lower lung"
+29,cheff/42351.png,"mild Calcification on bilateral lung, moderate Fibrosis on bilateral lung"
+30,roentgen/47242.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Nodule on left middle lung, mild Pleural Thickening on left lower lung"
+31,aurad_plus/47271.png,"mild Calcification on bilateral lung, mild Consolidation on bilateral lung, mild Effusion on left lower lung"
+32,aurad_plus/42351.png,"mild Calcification on bilateral lung, moderate Fibrosis on bilateral lung"
+33,cheff/61716.png,"mild Effusion on right lower lung, mild Pleural Thickening on right lung"
+34,cheff/46994.png,"mild Consolidation on right lower lung, mild Effusion on left lower lung, mild Nodule on bilateral lung"
+35,aurad_plus/40388.png,Normal
+36,real/69887.png,Normal
+37,real/41518.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Fracture on bilateral lung, mild Nodule on left lung"
+38,cheff/46023.png,"mild Consolidation on bilateral lung, moderate Effusion on bilateral lung"
+39,roentgen/59420.png,"mild Calcification on left lung, mild Effusion on right lower lung, mild Fracture on right lung"
+40,roentgen/59576.png,"moderate Consolidation on right lung, mild Effusion on right lower lung, mild Fracture on left lung, mild Pneumothorax on right upper lung"
+41,real/56618.png,"mild Consolidation on right middle lung, mild Fracture on right middle lung, mild Pleural Thickening on left lower lung, mild Pneumothorax on right upper lung"
+42,real/46994.png,"mild Consolidation on right lower lung, mild Effusion on left lower lung, mild Nodule on bilateral lung"
+43,roentgen/45617.png,"mild Consolidation on left lower lung, mild Effusion on bilateral lung"
+44,real/47271.png,"mild Calcification on bilateral lung, mild Consolidation on bilateral lung, mild Effusion on left lower lung"
+45,cheff/70325.png,"severe Consolidation on bilateral lung, severe Effusion on bilateral lung, mild Nodule on left upper lung"
+46,roentgen/58528.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+47,real/39133.png,"moderate Consolidation on left lung, severe Effusion on left lung"
+48,cheff/55836.png,mild Fibrosis on left middle lung
+49,roentgen/70325.png,"severe Consolidation on bilateral lung, severe Effusion on bilateral lung, mild Nodule on left upper lung"
+50,cheff/58528.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+51,roentgen/68962.png,severe Consolidation on bilateral lung
+52,roentgen/46994.png,"mild Consolidation on right lower lung, mild Effusion on left lower lung, mild Nodule on bilateral lung"
+53,aurad_plus/46994.png,"mild Consolidation on right lower lung, mild Effusion on left lower lung, mild Nodule on bilateral lung"
+54,aurad_plus/68962.png,severe Consolidation on bilateral lung
+55,aurad_plus/55836.png,mild Fibrosis on left middle lung
+56,real/70325.png,"severe Consolidation on bilateral lung, severe Effusion on bilateral lung, mild Nodule on left upper lung"
+57,cheff/70374.png,"mild Calcification on left upper lung, severe Consolidation on bilateral lung, severe Effusion on bilateral lung"
+58,cheff/59444.png,"mild Atelectasis on right lower lung, mild Consolidation on heart, mild Effusion on right lower lung, mild Nodule on bilateral lung, mild Pleural Thickening on right lung"
+59,real/55836.png,mild Fibrosis on left middle lung
+60,roentgen/47271.png,"mild Calcification on bilateral lung, mild Consolidation on bilateral lung, mild Effusion on left lower lung"
+61,aurad_plus/56618.png,"mild Consolidation on right middle lung, mild Fracture on right middle lung, mild Pleural Thickening on left lower lung, mild Pneumothorax on right upper lung"
+62,roentgen/69995.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+63,aurad_plus/39996.png,"mild Consolidation on right middle lung, mild Pneumothorax on right upper lung"
+64,real/59420.png,"mild Calcification on left lung, mild Effusion on right lower lung, mild Fracture on right lung"
+65,aurad_plus/46023.png,"mild Consolidation on bilateral lung, moderate Effusion on bilateral lung"
+66,cheff/41207.png,Normal
+67,aurad_plus/69887.png,Normal
+68,real/47170.png,severe Consolidation on bilateral lung
+69,real/47242.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Nodule on left middle lung, mild Pleural Thickening on left lower lung"
+70,roentgen/40388.png,Normal
+71,cheff/45617.png,"mild Consolidation on left lower lung, mild Effusion on bilateral lung"
+72,roentgen/46023.png,"mild Consolidation on bilateral lung, moderate Effusion on bilateral lung"
+73,roentgen/47170.png,severe Consolidation on bilateral lung
+74,aurad_plus/39133.png,"moderate Consolidation on left lung, severe Effusion on left lung"
+75,aurad_plus/69995.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+76,real/46023.png,"mild Consolidation on bilateral lung, moderate Effusion on bilateral lung"
+77,roentgen/41518.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Fracture on bilateral lung, mild Nodule on left lung"
+78,cheff/47271.png,"mild Calcification on bilateral lung, mild Consolidation on bilateral lung, mild Effusion on left lower lung"
+79,cheff/59576.png,"moderate Consolidation on right lung, mild Effusion on right lower lung, mild Fracture on left lung, mild Pneumothorax on right upper lung"
+80,cheff/69887.png,Normal
+81,real/40388.png,Normal
+82,cheff/40388.png,Normal
+83,real/69995.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+84,real/60255.png,"mild Consolidation on left upper lung, severe Effusion on bilateral lung, mild Nodule on left lower lung, mild Pleural Thickening on left upper lung"
+85,aurad_plus/47170.png,severe Consolidation on bilateral lung
+86,cheff/69995.png,"severe Consolidation on bilateral lung, mild Effusion on left lower lung"
+87,roentgen/39996.png,"mild Consolidation on right middle lung, mild Pneumothorax on right upper lung"
+88,aurad_plus/47242.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Nodule on left middle lung, mild Pleural Thickening on left lower lung"
+89,aurad_plus/59444.png,"mild Atelectasis on right lower lung, mild Consolidation on heart, mild Effusion on right lower lung, mild Nodule on bilateral lung, mild Pleural Thickening on right lung"
+90,aurad_plus/61716.png,"mild Effusion on right lower lung, mild Pleural Thickening on right lung"
+91,aurad_plus/70325.png,"severe Consolidation on bilateral lung, severe Effusion on bilateral lung, mild Nodule on left upper lung"
+92,roentgen/56618.png,"mild Consolidation on right middle lung, mild Fracture on right middle lung, mild Pleural Thickening on left lower lung, mild Pneumothorax on right upper lung"
+93,cheff/39996.png,"mild Consolidation on right middle lung, mild Pneumothorax on right upper lung"
+94,real/68962.png,severe Consolidation on bilateral lung
+95,real/42351.png,"mild Calcification on bilateral lung, moderate Fibrosis on bilateral lung"
+96,aurad_plus/59576.png,"moderate Consolidation on right lung, mild Effusion on right lower lung, mild Fracture on left lung, mild Pneumothorax on right upper lung"
+97,aurad_plus/59420.png,"mild Calcification on left lung, mild Effusion on right lower lung, mild Fracture on right lung"
+98,cheff/41518.png,"severe Emphysema on bilateral lung, severe Fibrosis on bilateral lung, mild Fracture on bilateral lung, mild Nodule on left lung"
+99,real/41207.png,Normal
+100,cheff/56618.png,"mild Consolidation on right middle lung, mild Fracture on right middle lung, mild Pleural Thickening on left lower lung, mild Pneumothorax on right upper lung"
