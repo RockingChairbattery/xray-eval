@@ -558,6 +558,12 @@
         showInfo("Could not reach Google Sheet. Loaded local cache instead. Scores will sync when connection is restored.");
       }
 
+      // Resume at the first unfinished sample (or the last sample if all done)
+      const doneSet = computeCompletedSet();
+      const firstUnfinished = samples.findIndex(s => !doneSet.has(s.sample_id));
+      currentIndex = firstUnfinished === -1 ? samples.length - 1 : firstUnfinished;
+      saveLocalCache();
+
       // Show app
       document.getElementById("loginContainer").style.display = "none";
       document.getElementById("appContainer").style.display = "block";
