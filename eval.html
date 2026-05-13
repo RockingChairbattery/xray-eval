@@ -341,28 +341,62 @@
     // ── CONFIG ────────────────────────────────────────────────────────────────
     const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbw1qsNLrcaN4Xsc4ZwgQ-ttv_Q7_XwOYlAOQNvp6bd4x2jSIMbJhCl2kcvtFoGODwk3-Q/exec";
     const IMAGE_BASE_URL   = "https://raw.githubusercontent.com/RockingChairbattery/xray-eval/main/source/image";
+    const CSV_URL          = "list.csv";   // dynamically loaded from same repo; replace data.csv to update
     const STORAGE_KEY      = "radiologist_eval_online_v2";
 
-    const SAMPLES = [
-      {"sample_id":"1", "image_path":"cheff/36199.png",      "text_prompt":"Normal"},
-      {"sample_id":"2", "image_path":"real/69978.png",       "text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
-      {"sample_id":"3", "image_path":"real/36199.png",       "text_prompt":"Normal"},
-      {"sample_id":"4", "image_path":"aurad/40422.png",      "text_prompt":"mild Consolidation on left upper lung"},
-      {"sample_id":"5", "image_path":"ours/69978.png",       "text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
-      {"sample_id":"6", "image_path":"cheff/40422.png",      "text_prompt":"mild Consolidation on left upper lung"},
-      {"sample_id":"7", "image_path":"roentgen/69978.png",   "text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
-      {"sample_id":"8", "image_path":"aurad/36199.png",      "text_prompt":"Normal"},
-      {"sample_id":"9", "image_path":"roentgenv2/40422.png", "text_prompt":"mild Consolidation on left upper lung"},
-      {"sample_id":"10","image_path":"real/40422.png",       "text_prompt":"mild Consolidation on left upper lung"},
-      {"sample_id":"11","image_path":"roentgen/40422.png",   "text_prompt":"mild Consolidation on left upper lung"},
-      {"sample_id":"12","image_path":"ours/36199.png",       "text_prompt":"Normal"},
-      {"sample_id":"13","image_path":"aurad/69978.png",      "text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
-      {"sample_id":"14","image_path":"ours/40422.png",       "text_prompt":"mild Consolidation on left upper lung"},
-      {"sample_id":"15","image_path":"roentgenv2/36199.png", "text_prompt":"Normal"},
-      {"sample_id":"16","image_path":"roentgen/36199.png",   "text_prompt":"Normal"},
-      {"sample_id":"17","image_path":"cheff/69978.png",      "text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"},
-      {"sample_id":"18","image_path":"roentgenv2/69978.png", "text_prompt":"severe Cardiomegaly on heart, moderate Effusion on bilateral lung"}
-    ];
+    // SAMPLES is loaded dynamically from CSV_URL at login time.
+    let SAMPLES = [];
+
+    // ── CSV PARSER (handles quoted fields, commas, escaped quotes) ────────────
+    function parseCSV(text) {
+      // Strip UTF-8 BOM if present
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+      const rows = [];
+      let cur = [], field = "", inQuotes = false, i = 0;
+      while (i < text.length) {
+        const c = text[i];
+        if (inQuotes) {
+          if (c === '"' && text[i+1] === '"') { field += '"'; i += 2; continue; }
+          if (c === '"') { inQuotes = false; i++; continue; }
+          field += c; i++;
+        } else {
+          if (c === '"') { inQuotes = true; i++; continue; }
+          if (c === ',') { cur.push(field); field = ""; i++; continue; }
+          if (c === '\r') { i++; continue; }
+          if (c === '\n') { cur.push(field); rows.push(cur); cur = []; field = ""; i++; continue; }
+          field += c; i++;
+        }
+      }
+      if (field.length > 0 || cur.length > 0) { cur.push(field); rows.push(cur); }
+      if (rows.length === 0) return [];
+      const headers = rows[0].map(h => h.trim());
+      return rows.slice(1)
+        .filter(r => r.length > 0 && r.some(v => v && v.trim() !== ""))
+        .map(r => {
+          const obj = {};
+          headers.forEach((h, idx) => { obj[h] = (r[idx] || "").trim(); });
+          return obj;
+        });
+    }
+
+    async function loadSamplesFromCSV() {
+      // Cache-bust so updates show up without hard-refresh
+      const url = CSV_URL + "?t=" + Date.now();
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to load " + CSV_URL + " (HTTP " + res.status + ")");
+      const text = await res.text();
+      const rows = parseCSV(text);
+      if (rows.length === 0) throw new Error("CSV is empty");
+      // Validate required columns
+      const required = ["sample_id", "image_path", "text_prompt"];
+      const missing = required.filter(k => !(k in rows[0]));
+      if (missing.length) throw new Error("CSV missing column(s): " + missing.join(", "));
+      return rows.map(r => ({
+        sample_id:   String(r.sample_id),
+        image_path:  r.image_path,
+        text_prompt: r.text_prompt
+      }));
+    }
     // ─────────────────────────────────────────────────────────────────────────
 
     let evaluatorId = "";
@@ -479,6 +513,18 @@
       document.getElementById("loginBtn").disabled = true;
       document.getElementById("loginError").style.display = "none";
       document.getElementById("loginLoading").style.display = "block";
+
+      // Load samples from CSV first
+      try {
+        SAMPLES = await loadSamplesFromCSV();
+      } catch (err) {
+        document.getElementById("loginLoading").style.display = "none";
+        document.getElementById("loginBtn").disabled = false;
+        document.getElementById("loginError").style.display = "block";
+        document.getElementById("loginError").textContent =
+          "Failed to load samples: " + err.message;
+        return;
+      }
 
       // Init samples
       samples = SAMPLES.map(s => ({ ...s }));
